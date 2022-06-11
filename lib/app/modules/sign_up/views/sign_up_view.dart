@@ -29,11 +29,20 @@ class SignUpView extends GetView<SignUpController> {
                   height: 20.h,
                 ),
                 ReusableTextField(
-                    controller: controller.fullName, hintText: "Full Name"),
+                  controller: controller.fullName,
+                  hintText: "Full Name",
+                  isMultiLine: false,
+                ),
                 ReusableTextField(
-                    hintText: "Email", controller: controller.email),
+                  hintText: "Email",
+                  controller: controller.email,
+                  isMultiLine: false,
+                ),
                 ReusableTextField(
-                    hintText: "Password", controller: controller.password),
+                  hintText: "Password",
+                  controller: controller.password,
+                  isMultiLine: false,
+                ),
                 SizedBox(
                   height: 20.h,
                 ),
