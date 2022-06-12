@@ -1,6 +1,7 @@
 import 'package:blog_app/app/data/global_widgets/app_bar.dart';
 import 'package:blog_app/app/data/global_widgets/custom_button.dart';
 import 'package:blog_app/app/data/global_widgets/text_field.dart';
+import 'package:blog_app/app/models/blog_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,14 +10,19 @@ import 'package:get/get.dart';
 import '../controllers/upload_blog_controller.dart';
 
 class UploadBlogView extends GetView<UploadBlogController> {
+  BlogsModel? model = Get.arguments;
   @override
   Widget build(BuildContext context) {
+    if (model != null) {
+      controller.title = TextEditingController(text: model!.title);
+      controller.description = TextEditingController(text: model!.description);
+    }
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Column(
           children: [
-            CustomAppBar(title: "Create Blog"),
+            CustomAppBar(title: model == null ? "Create Blog" : "Update Blog"),
             SizedBox(
               height: 20.h,
             ),
@@ -60,9 +66,13 @@ class UploadBlogView extends GetView<UploadBlogController> {
           alignment: Alignment.topCenter,
           child: CustomButton(
             function: () {
-              controller.createBlog();
+              if (model == null) {
+                controller.createBlog();
+              } else {
+                controller.editBlog(model!);
+              }
             },
-            title: "Create Blog",
+            title: model == null ? "Create Blog" : "Update Blog",
           ),
         ),
       ),

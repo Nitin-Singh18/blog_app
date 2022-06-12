@@ -9,7 +9,13 @@ import 'package:get/get.dart';
 class Post extends StatelessWidget {
   final BlogsModel model;
   final bool isPopUpMenuEnabled;
-  const Post({Key? key, required this.model, required this.isPopUpMenuEnabled})
+  final Function? edit, delete;
+  const Post(
+      {Key? key,
+      required this.model,
+      required this.isPopUpMenuEnabled,
+      required this.delete,
+      required this.edit})
       : super(key: key);
 
   @override
@@ -38,6 +44,13 @@ class Post extends StatelessWidget {
                     ? Padding(
                         padding: EdgeInsets.all(10.r),
                         child: PopupMenuButton(
+                          onSelected: (value) {
+                            if (value == 0) {
+                              edit!();
+                            } else if (value == 1) {
+                              delete!();
+                            }
+                          },
                           child: Icon(
                             Icons.more_vert,
                             color: Colors.white,

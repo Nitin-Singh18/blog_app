@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:blog_app/app/data/const.dart';
 import 'package:blog_app/app/data/firebase/firebase_functions.dart';
 import 'package:blog_app/app/data/global_widgets/indicator.dart';
+import 'package:blog_app/app/models/blog_model.dart';
+import 'package:blog_app/app/modules/home/controllers/home_controller.dart';
+import 'package:blog_app/app/modules/my_blogs/controllers/my_blogs_controller.dart';
+import 'package:blog_app/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,13 +40,53 @@ class UploadBlogController extends GetxController {
             .then((value) {
           Indicator.closeLoading();
           showAlert("Blog Created Successfully");
-          Get.back();
+          Get.delete<HomeController>();
+          Get.toNamed(Routes.HOME);
         });
       } else {
         showAlert("Select an image");
       }
     } else {
       showAlert("All fields should be filled");
+    }
+  }
+
+  void editBlog(BlogsModel model) async {
+    Indicator.showLoading();
+    if (title.text.isNotEmpty && description.text.isNotEmpty) {
+      if (imageFile == null) {
+        Map<String, dynamic> map = {
+          'title': title.text,
+          'description': description.text,
+        };
+        await _functions.editBlog(model.id, map).then((value) {
+          showAlert("Blog Updated Successfully");
+        });
+      } else {
+        String iamgeUrl = await _functions.uploadImage(imageFile!);
+        Map<String, dynamic> map = {
+          'title': title.text,
+          'description': description.text,
+        };
+        await _functions.editBlog(model.id, map).then((value) {
+          showAlert("Blog Updated Successfully");
+        });
+      }
+    } else {
+      showAlert("All fields are required");
+    }
+    Indicator.closeLoading();
+    updateData();
+  }
+
+  void updateData() {
+    Get.back();
+    if (Get.isRegistered<MyBlogsController>()) {
+      final controller = Get.find<MyBlogsController>();
+
+      controller.myBlogs = [];
+      Indicator.showLoading();
+      controller.getMyBlogData();
     }
   }
 }

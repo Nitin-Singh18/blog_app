@@ -55,6 +55,8 @@ class HomeView extends GetView<HomeController> {
                             child: Post(
                               isPopUpMenuEnabled: false,
                               model: value.blogs[index],
+                              delete: null,
+                              edit: null,
                             ));
                       });
                 } else {

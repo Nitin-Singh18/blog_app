@@ -89,7 +89,7 @@ class FirebaseFunctions {
           if (_lastDocument == null) {
             return await _firebaseFirestore
                 .collection('blogs')
-                .orderBy('time')
+                .orderBy('time', descending: true)
                 .limit(_documentLimit)
                 .get()
                 .then((value) {
@@ -173,6 +173,39 @@ class FirebaseFunctions {
     } catch (e) {
       showAlert("$e");
       return BlogsModel(id: "", title: "", description: "", image: "");
+    }
+  }
+
+  Future<void> deleteBlog(String id) async {
+    await Future.wait([deleteMyBlog(id), deletePublicBlog(id)]);
+  }
+
+  Future<void> deletePublicBlog(String id) async {
+    try {
+      await _firebaseFirestore.collection('blogs').doc(id).delete();
+    } catch (e) {
+      showAlert("$e");
+    }
+  }
+
+  Future<void> deleteMyBlog(String id) async {
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('myblogs')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      showAlert("$e");
+    }
+  }
+
+  Future<void> editBlog(String id, Map<String, dynamic> map) async {
+    try {
+      await _firebaseFirestore.collection('blogs').doc(id).update(map);
+    } catch (e) {
+      showAlert("$e");
     }
   }
 }
