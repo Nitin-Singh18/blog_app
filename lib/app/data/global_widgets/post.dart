@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:blog_app/app/models/blog_model.dart';
 import 'package:blog_app/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,9 @@ import 'package:get/get.dart';
 
 class Post extends StatelessWidget {
   final BlogsModel model;
-  const Post({Key? key, required this.model}) : super(key: key);
+  final bool isPopUpMenuEnabled;
+  const Post({Key? key, required this.model, required this.isPopUpMenuEnabled})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +27,34 @@ class Post extends StatelessWidget {
               height: 4.h,
             ),
             Container(
-              height: 155.h,
-              width: 320.w,
-              decoration:
-                  // ignore: prefer_const_constructors
-                  BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: NetworkImage(model.image)),
-              ),
-            ),
+                height: 155.h,
+                width: 320.w,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover, image: NetworkImage(model.image)),
+                ),
+                alignment: Alignment.topRight,
+                child: isPopUpMenuEnabled
+                    ? Padding(
+                        padding: EdgeInsets.all(10.r),
+                        child: PopupMenuButton(
+                          child: Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                          ),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: Text("Edit"),
+                              value: 0,
+                            ),
+                            PopupMenuItem(
+                              child: Text("Delete"),
+                              value: 1,
+                            )
+                          ],
+                        ),
+                      )
+                    : SizedBox()),
             SizedBox(
               height: 10.h,
             ),

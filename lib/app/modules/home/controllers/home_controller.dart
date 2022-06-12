@@ -8,7 +8,6 @@ class HomeController extends GetxController {
   final FirebaseFunctions _functions = FirebaseFunctions();
   final ScrollController controller = ScrollController();
   List<BlogsModel> blogs = [];
-  List favouriteList = [];
   var isLoading = false.obs;
 
   void getData() async {

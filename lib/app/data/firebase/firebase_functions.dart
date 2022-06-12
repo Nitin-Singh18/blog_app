@@ -53,7 +53,13 @@ class FirebaseFunctions {
         'img': imageUrl,
         'time': time,
       };
-      await _firebaseFirestore.collection('blogs').doc(id).set(blogDetails);
+      await _firebaseFirestore
+          .collection('blogs')
+          .doc(id)
+          .set(blogDetails)
+          .then((value) {
+        saveDataToMyBlogs(id);
+      });
     } catch (e) {
       showAlert("$e");
     }
@@ -127,6 +133,46 @@ class FirebaseFunctions {
     } else {
       print('No More Data');
       return [];
+    }
+  }
+
+  Future<void> saveDataToMyBlogs(String id) async {
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('myblogs')
+          .doc(id)
+          .set({
+        'id': id,
+      });
+    } catch (e) {
+      showAlert("$e");
+    }
+  }
+
+  Future<List> getMyBlogs() async {
+    try {
+      var snapshot = await _firebaseFirestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('myblogs')
+          .get();
+      return snapshot.docs.map((e) => e.data()['id']).toList();
+    } catch (e) {
+      showAlert("$e");
+      return [];
+    }
+  }
+
+  Future<BlogsModel> getBlogById(String id) async {
+    try {
+      var documentSnsapshot =
+          await _firebaseFirestore.collection('blogs').doc(id).get();
+      return BlogsModel.fromJson(documentSnsapshot.data()!);
+    } catch (e) {
+      showAlert("$e");
+      return BlogsModel(id: "", title: "", description: "", image: "");
     }
   }
 }

@@ -30,7 +30,9 @@ class HomeView extends GetView<HomeController> {
                           fontSize: 28.sp, fontWeight: FontWeight.w600),
                     ),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(Routes.PROFILE);
+                        },
                         icon: Icon(
                           Icons.account_circle,
                           size: 30.h,
@@ -51,6 +53,7 @@ class HomeView extends GetView<HomeController> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 15.w, vertical: 5.h),
                             child: Post(
+                              isPopUpMenuEnabled: false,
                               model: value.blogs[index],
                             ));
                       });
